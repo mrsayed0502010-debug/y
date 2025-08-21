@@ -18,6 +18,10 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'arabic': ['Noto Sans Arabic', 'sans-serif'],
+				'quran': ['Amiri', 'serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -26,7 +30,8 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					foreground: 'hsl(var(--primary-foreground))',
+					soft: 'hsl(var(--primary-soft))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -51,6 +56,14 @@ export default {
 				card: {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
+				},
+				islamic: {
+					green: 'hsl(var(--islamic-green))',
+					'green-light': 'hsl(var(--islamic-green-light))',
+					blue: 'hsl(var(--islamic-blue))',
+					'blue-light': 'hsl(var(--islamic-blue-light))',
+					gold: 'hsl(var(--islamic-gold))',
+					'gold-light': 'hsl(var(--islamic-gold-light))'
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
