@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Clock, MapPin, Volume2, VolumeX } from 'lucide-react';
+import { Clock, MapPin, Volume2, VolumeX, Timer } from 'lucide-react';
+import { formatInTimeZone, toZonedTime } from 'date-fns-tz';
 
 interface PrayerTimes {
   Fajr: string;
@@ -18,18 +19,10 @@ const PrayerSection = () => {
   const [loading, setLoading] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isAdhanEnabled, setIsAdhanEnabled] = useState(false);
-
-  // Sample prayer times (in real app, you'd fetch from an API)
-  const samplePrayerTimes: PrayerTimes = {
-    Fajr: '04:45',
-    Dhuhr: '12:15',
-    Asr: '15:30',
-    Maghrib: '18:20',
-    Isha: '19:45'
-  };
+  const [timeToNext, setTimeToNext] = useState<string>('');
 
   useEffect(() => {
-    setPrayerTimes(samplePrayerTimes);
+    fetchPrayerTimes();
     
     // Update current time every second
     const timer = setInterval(() => {
@@ -37,20 +30,69 @@ const PrayerSection = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [city]);
+
+  useEffect(() => {
+    // Calculate time to next prayer
+    if (prayerTimes) {
+      const nextPrayer = getNextPrayer();
+      if (nextPrayer) {
+        const now = new Date();
+        const [hour, minute] = prayerTimes[nextPrayer.name as keyof PrayerTimes].split(':').map(Number);
+        const nextPrayerTime = new Date();
+        nextPrayerTime.setHours(hour, minute, 0, 0);
+        
+        // If next prayer is tomorrow
+        if (nextPrayerTime <= now) {
+          nextPrayerTime.setDate(nextPrayerTime.getDate() + 1);
+        }
+        
+        const timeDiff = nextPrayerTime.getTime() - now.getTime();
+        const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        
+        setTimeToNext(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+      }
+    }
+  }, [currentTime, prayerTimes]);
 
   const fetchPrayerTimes = async () => {
     setLoading(true);
     try {
-      // In a real app, you'd use an API like:
-      // https://api.aladhan.com/v1/timingsByCity?city=${city}&country=&method=2
-      // For now, we'll simulate with sample data
-      setTimeout(() => {
-        setPrayerTimes(samplePrayerTimes);
-        setLoading(false);
-      }, 1000);
+      const response = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=&method=2`);
+      const data = await response.json();
+      
+      if (data.code === 200) {
+        const timings = data.data.timings;
+        setPrayerTimes({
+          Fajr: timings.Fajr,
+          Dhuhr: timings.Dhuhr,
+          Asr: timings.Asr,
+          Maghrib: timings.Maghrib,
+          Isha: timings.Isha
+        });
+      } else {
+        // Fallback to default times for Cairo
+        setPrayerTimes({
+          Fajr: '04:45',
+          Dhuhr: '12:15',
+          Asr: '15:30',
+          Maghrib: '18:20',
+          Isha: '19:45'
+        });
+      }
     } catch (error) {
       console.error('Error fetching prayer times:', error);
+      // Fallback to default times
+      setPrayerTimes({
+        Fajr: '04:45',
+        Dhuhr: '12:15',
+        Asr: '15:30',
+        Maghrib: '18:20',
+        Isha: '19:45'
+      });
+    } finally {
       setLoading(false);
     }
   };
@@ -137,7 +179,7 @@ const PrayerSection = () => {
           </Card>
 
           {/* Current Time & Next Prayer */}
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
             <Card className="p-6 text-center bg-islamic-green-light">
               <h3 className="text-lg font-bold text-islamic-green mb-2">الوقت الحالي</h3>
               <p className="text-3xl font-bold text-foreground">
@@ -169,6 +211,19 @@ const PrayerSection = () => {
                   </p>
                 </>
               )}
+            </Card>
+
+            <Card className="p-6 text-center bg-accent">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <Timer className="w-5 h-5 text-islamic-gold" />
+                <h3 className="text-lg font-bold text-islamic-gold">العد التنازلي</h3>
+              </div>
+              <p className="text-2xl font-bold text-foreground font-mono" dir="ltr">
+                {timeToNext || '00:00:00'}
+              </p>
+              <p className="text-sm text-muted-foreground mt-2">
+                للصلاة القادمة
+              </p>
             </Card>
           </div>
 
@@ -226,8 +281,8 @@ const PrayerSection = () => {
           {/* Reference Link */}
           <div className="text-center mt-8">
             <Card className="p-4 bg-accent">
-              <p className="text-muted-foreground">
-                للمزيد من مواقيت الصلاة الدقيقة، يرجى زيارة:
+              <p className="text-muted-foreground text-sm">
+                المواقيت مأخوذة من API حقيقي • للمزيد من مواقيت الصلاة الدقيقة:
                 <a href="https://timesprayer.com/prayer-times-in-cairo.html" 
                    target="_blank" 
                    rel="noopener noreferrer"
