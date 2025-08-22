@@ -24,7 +24,7 @@ const HeroSection = () => {
             <div className="mb-8">
               <div className="w-48 h-48 mx-auto rounded-full overflow-hidden shadow-golden border-4 border-islamic-gold/30 animate-float">
                 <img 
-                  src="logo.jpg" 
+                  src="https://h.top4top.io/p_3521n9noe1.jpg" 
                   alt="المرحومه شاديه عبد الغني عبد الرحمن مشالي"
                   className="w-full h-full object-cover"
                 />
