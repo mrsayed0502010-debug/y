@@ -6,6 +6,8 @@ import TasbihSection from '@/components/TasbihSection';
 import PrayerSection from '@/components/PrayerSection';
 import DuasSection from '@/components/DuasSection';
 import Footer from '@/components/Footer';
+import ShortcutBar from '@/components/ShortcutBar';
+import NotificationSystem from '@/components/NotificationSystem';
 
 const Index = () => {
   return (
@@ -18,6 +20,8 @@ const Index = () => {
       <PrayerSection />
       <DuasSection />
       <Footer />
+      <ShortcutBar />
+      <NotificationSystem />
     </div>
   );
 };
