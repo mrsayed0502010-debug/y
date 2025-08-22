@@ -17,13 +17,13 @@ const Footer = () => {
             </div>
             
             <p className="text-lg font-quran text-foreground mb-4">
-              "صدقة جارية إهداءً لروح المرحوم دهمان صالح الشحات"
+            "صدقة جارية إهداءً لروح المرحومه شاديه عبد الغني عبد الرحمن مشالي"
             </p>
             
             <div className="w-24 h-1 bg-islamic-gold mx-auto rounded-full mb-4"></div>
             
             <p className="text-muted-foreground font-quran">
-              رحمه الله تعالى وأسكنه فسيح جناته
+            كرحمه الله تعالى وأسكنها فسيح جناته
             </p>
           </div>
 
