@@ -25,7 +25,7 @@ const HeroSection = () => {
               <div className="w-48 h-48 mx-auto rounded-full overflow-hidden shadow-golden border-4 border-islamic-gold/30 animate-float">
                 <img 
                   src="/images/deceased-photo.jpg" 
-                  alt="المرحوم دهمان صالح الشحات"
+                  alt="المرحومه شاديه عبد الغني عبد الرحمن مشالي"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -34,7 +34,7 @@ const HeroSection = () => {
             {/* Name and Prayer */}
             <div className="mb-8">
               <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                المرحوم دهمان صالح الشحات
+                المرحوم شاديه عبد الغني عبد الرحمن مشالي
               </h3>
               <div className="text-lg md:text-xl text-muted-foreground leading-relaxed font-quran">
                 <p className="mb-4">رحمه الله تعالى وأسكنه فسيح جناته</p>
